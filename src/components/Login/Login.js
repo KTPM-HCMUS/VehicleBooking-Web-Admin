@@ -2,11 +2,9 @@ import React, { useContext, useState } from "react";
 import "./Login.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { fab, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { UserContext } from "../../App";
 import { useHistory, useLocation } from "react-router";
 
-library.add(fab, faGoogle);
 
 
 const Login = () => {
@@ -27,7 +25,7 @@ const Login = () => {
       userInfo.userId = event.target.value;
     } 
     else if (eventName === "password"){
-        userInfo.password = event.target.value;
+      userInfo.password = event.target.value;
     }
     setUser(userInfo);
   };
@@ -46,43 +44,25 @@ const Login = () => {
   };
 
   const handleLogin = (event) => {
-    
     event.preventDefault();
   };
-
-  const [logInForm] = useState(false);
+  const [logInForm, setLogInForm] = useState(true);
 
   return (
     <>
       <div className="container login-page d-flex justify-content-center">
         <div className="login-form">
           <div style={{ border: "1px solid gray", borderRadius: "5px" }}>
-            {logInForm && (
+            {logInForm && 
+            (
               <form className="form-content" onSubmit={handleLogin}>
-                <h3 className="mb-4">Login</h3>
-                <input
-                  type="tel"
-                  name="userId"
-                  id=""
-                  placeholder="Phone"
-                  onBlur={handleOnBlur}
-                  className="form-input mb-3"
-                  required />
-                <input
-                  type="password"
-                  name="password"
-                  id=""
-                  placeholder="Password"
-                  onBlur={handleOnBlur}
-                  className="form-input mb-3"
-                  required/>
-                <input
-                  type="submit"
-                  value="Login"
-                  className="mb-3 submit-btn"/>
-                
+                <h3 className="mb-4">Admin Login</h3>
+                <input type="tel" name="userId" id="" placeholder="Phone" onBlur={handleOnBlur} className="form-input mb-3" required/>
+                <input type="password" name="password" id="" placeholder="Password" onBlur={handleOnBlur} className="form-input mb-3" required/>
+                <input type="submit" value="Login" className="mb-3 submit-btn"/>
                 {error && <p style={{ color: "red" }}>{error}</p>}
-              </form>)}
+              </form>
+            )}
           </div>
         </div>
       </div>

@@ -4,10 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
-import Destination from "./components/Destination/Destination";
-import NoMatch from "./components/NoMatch/NoMatch";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-
+import NoMatch from "./components/404/404";
 export const UserContext = createContext();
 
 function App() {
