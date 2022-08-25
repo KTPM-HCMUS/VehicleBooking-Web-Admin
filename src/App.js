@@ -5,6 +5,7 @@ import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import NoMatch from "./components/404/404";
+import BasicTable from "./components/History/History";
 export const UserContext = createContext();
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
           <Switch>
             <Route path="/home">
               <Home></Home>
+            </Route>
+            <Route path="/statistic">
+              <BasicTable></BasicTable>
             </Route>
             <Route path="/login">
               <Login></Login>
