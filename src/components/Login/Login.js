@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { UserContext } from "../../App";
 import { useHistory, useLocation } from "react-router";
-
-
+import axios from 'axios';
 
 const Login = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -38,31 +37,36 @@ const Login = () => {
     history.replace(from);
   };
 
+  async function signIn(){
+    const response = await fetch("/login", {
+      userId: user.userId,
+      password: user.password
+    });
+    const json = await response.json();
+    console.log(json)
+  }
+
   const showError = (error) => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
 
   const handleLogin = (event) => {
+    signIn();
     event.preventDefault();
   };
-  const [logInForm, setLogInForm] = useState(true);
-
   return (
     <>
       <div className="container login-page d-flex justify-content-center">
         <div className="login-form">
           <div style={{ border: "1px solid gray", borderRadius: "5px" }}>
-            {logInForm && 
-            (
-              <form className="form-content" onSubmit={handleLogin}>
+            <form className="form-content" onSubmit={handleLogin}>
                 <h3 className="mb-4">Admin Login</h3>
                 <input type="tel" name="userId" id="" placeholder="Phone" onBlur={handleOnBlur} className="form-input mb-3" required/>
                 <input type="password" name="password" id="" placeholder="Password" onBlur={handleOnBlur} className="form-input mb-3" required/>
                 <input type="submit" value="Login" className="mb-3 submit-btn"/>
                 {error && <p style={{ color: "red" }}>{error}</p>}
               </form>
-            )}
           </div>
         </div>
       </div>
