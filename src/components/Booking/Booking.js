@@ -7,7 +7,6 @@ import bikeImage from "../../images/bike.png";
 import carImage from "../../images/car.png";
 import Autocomplete from "react-google-autocomplete";
 import { DirectionsRenderer, DirectionsService, GoogleMap, LoadScript, Marker} from "@react-google-maps/api";
-import { Alert } from "bootstrap";
 
 const API_KEY = "AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA";
 const containerStyle = {
@@ -63,21 +62,20 @@ const Booking = () => {
     setBooking(updateBooking);
   };
 
-  const handleSubmit = async (event) => {
-    console.log(localStorage.getItem("token"));
-    var objectdata;
-    objectdata.typeOfVehicle = 1;
-    objectdata.longitudeDepart = 106.6823;
-    objectdata.latitudeDepart = 10.7627;
-    objectdata.longitudeDestination = 106.6633127;
-    objectdata.latitudeDestination = 10.755126307591706;
-    objectdata.addressDepart = "227 Nguyễn Văn Cừ, Quận 5, TP Hồ Chí Minh";
-    objectdata.addressDestination = "217 Hồng Bàng, Quận 5, TP Hồ Chí Minh";
-    objectdata.price = 9300;
-    objectdata.userId = "123585";
-    objectdata.name = "Ngoc Le 123";
-
-    const response = await fetch("/api/v1/location/admin",{
+  async function bookingrequest(){
+    var objectdata = {
+      typeOfVehicle: 1,
+      longitudeDepart: 106.6823,
+      latitudeDepart: 10.7627,
+      longitudeDestination: 106.6633127,
+      latitudeDestination: 10.755126307591706,
+      addressDepart: "227 Nguyễn Văn Cừ, Quận 5, TP Hồ Chí Minh",
+      addressDestination: "217 Hồng Bàng, Quận 5, TP Hồ Chí Minh",
+      price: 9.3,
+      userId: "123585",
+      name: "Ngoc Le 123",
+    };
+      const response = await fetch("/api/v1/location/admin",{
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -95,26 +93,30 @@ const Booking = () => {
         price: objectdata.price,
         userId: objectdata.userId, 
         name: objectdata.name
+        })
       })
-    });
+    
     const json = await response.json();
     if (json)
     {
       if(json.userId){
-        alert("The driver with name " + json.name + " with vehicle plate number " + json.vehiclePlate + ", phone: " + json.userId + "has received the booking!");
+        showMessage("The driver with name " + json.name + " with vehicle plate number " + json.vehiclePlate + ", phone: " + json.userId + "has received the booking!");
       }
       else{
-        showError('No driver available!');
+        showMessage('No driver available!');
       }
     }
     else {
-      showError('No driver available!');
+      showMessage('No driver available!');
     }
+  }
+  
+  const handleSubmit = (event) => {
+    bookingrequest();
     event.preventDefault();
   };
 
-
-  const showError = (error) => {
+  const showMessage = (error) => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
@@ -125,7 +127,6 @@ const Booking = () => {
         <div className="col-md-4 search-form">
           {!transportation && (
             <form onSubmit={handleSubmit} className="search-form-content">
-              
               <label htmlFor="phone" className="mt-3 mb-2"> Phone </label>
               <input
                 type="tel"
@@ -170,6 +171,7 @@ const Booking = () => {
               {!emptyLocation && (
                 <p style={{ color: "red" }}>Location must not be empty.</p>
               )}
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </form>
           )}
           {transportation && (
