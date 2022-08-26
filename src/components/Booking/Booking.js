@@ -7,7 +7,7 @@ import bikeImage from "../../images/bike.png";
 import carImage from "../../images/car.png";
 
 import { DirectionsRenderer, DirectionsService, GoogleMap, LoadScript, Marker} from "@react-google-maps/api";
-const API_KEY = "";
+const API_KEY = "AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA";
 const containerStyle = {
   width: "100%",
   height: "715px",
@@ -28,32 +28,32 @@ const Booking = () => {
   ];
   const transport = rides.find((ride) => transportationMedium === ride.title);
   const { id, image, title, fare } = transport;
-
+  const [error, setError] = useState("");
   const [transportation, setTransportation] = useState(false);
   const [booking, setBooking] = useState({
-    pickup: "",
-    dropoff: "",
+    phone: "",
+    typeOfVehicle: transport.id,
+    longitudeDepart: 0.0 ,
+    latitudeDepart: 0.0,
+    longitudeDestination: 0.0,
+    latitudeDestination: 0.0,
+    addressDepart: "",
+    addressDestination: "",
+    price: ""
   });
   const [emptyLocation, setEmptyLocation] = useState(true);
 
   const handleOnBlur = (event) => {
-    const updateLocation = { ...location };
-    if (event.target.name === "pickup") {
-      const pickup = event.target.value;
-      updateLocation.pickup = pickup;
-    } else if (event.target.name === "dropoff") {
-      const dropoff = event.target.value;
-      updateLocation.dropoff = dropoff;
+    const updateBooking = { ...booking };
+    if(event.target.name === "phone"){
+        const phone = event.target.value;
+        console.log(phone);
     }
-    setLocation(updateLocation);
+    setBooking(updateBooking);
+    console.log(updateBooking.typeOfVehicle);
   };
 
   const handleSearch = (event) => {
-    if (location.pickup && location.dropoff) {
-      setTransportation(true);
-    } else {
-      setEmptyLocation(false);
-    }
     event.preventDefault();
   };
 
@@ -63,31 +63,49 @@ const Booking = () => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
-  
+
+  function getCoordinates(address){
+    fetch("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + '&key='+ API_KEY)
+      .then(response => response.json())
+      .then(data => {
+        var locationCoordinates; 
+        locationCoordinates.latitude = data.results.geometry.location.lat;
+        locationCoordinates.longitude = data.results.geometry.location.lng;
+        return locationCoordinates;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
   return (
     <div className="container mt-5 pb-5">
       <div className="row gx-5 pb-5">
         <div className="col-md-4 search-form">
           {!transportation && (
             <form onSubmit={handleSearch} className="search-form-content">
-              <label htmlFor="currentLocation" className="mt-3 mb-2">
-                Pick From
-              </label>
+              
+              <label htmlFor="phone" className="mt-3 mb-2"> Phone </label>
+              <input
+                type="tel"
+                name="phone"
+                onBlur={handleOnBlur}
+                className="location mb-2"/>
+
+              <label htmlFor="pickup" className="mb-2"> Pick Up </label>
               <input
                 type="text"
-                name="currentLocation"
+                name="pickup"
                 onBlur={handleOnBlur}
-                className="location mb-2"
-              />
-              <label htmlFor="destination" className="mb-2">
-                Destination
-              </label>
+                className="location mb-2"/>
+              
+              <label htmlFor="dropoff" className="mb-2"> Drop Off </label>
               <input
                 type="text"
-                name="destination"
+                name="dropoff"
                 onBlur={handleOnBlur}
-                className="location mb-2"
-              />
+                className="location mb-2"/>
+              
               <input
                 type="submit"
                 value="Search"
@@ -112,8 +130,8 @@ const Booking = () => {
                   <FontAwesomeIcon className="map-icon" icon={faRoad} />
                 </div>
                 <div className="pt-3 px-3">
-                  <h4>{location.currentLocation} to</h4>
-                  <h4>{location.destination}</h4>
+                  <h4>{booking.addressDepart} to</h4>
+                  <h4>{booking.addressDestination}</h4>
                 </div>
               </div>
               <div className="row gx-2 transport">
@@ -124,11 +142,7 @@ const Booking = () => {
                   <p>{title}</p>
                 </div>
                 <div className="col-3">
-                  <FontAwesomeIcon icon={faUsers} />
-                  <span>{availability}</span>
-                </div>
-                <div className="col-3">
-                  <p>${fare}</p>
+                  <p>{fare}</p>
                 </div>
               </div>
             </div>
@@ -136,7 +150,7 @@ const Booking = () => {
         </div>
         <div className="col-md-8">
           {!transportation && (
-            <LoadScript googleMapsApiKey="">
+            <LoadScript googleMapsApiKey="AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA">
               <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={position}
@@ -147,7 +161,7 @@ const Booking = () => {
             </LoadScript>
           )}
           {transportation && (
-            <LoadScript googleMapsApiKey="">
+            <LoadScript googleMapsApiKey="AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA">
               <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={position}
@@ -155,8 +169,8 @@ const Booking = () => {
               >
                 <DirectionsService
                   options={{
-                    destination: location.destination,
-                    origin: location.currentLocation,
+                    destination: booking.addressDestination,
+                    origin: booking.addressDepart,
                     travelMode: "TRANSIT",
                   }}
                   callback={(response) => {

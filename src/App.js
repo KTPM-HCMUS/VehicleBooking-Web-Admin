@@ -6,6 +6,8 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import NoMatch from "./components/404/404";
 import BasicTable from "./components/History/History";
+import Booking from "./components/Booking/Booking";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 export const UserContext = createContext();
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
             <Route path="/login">
               <Login></Login>
             </Route>
+            <PrivateRoute path="/booking/:transportationMedium">
+              <Booking></Booking>
+            </PrivateRoute>
             <Route exact path="/">
               <Home></Home>
             </Route>
