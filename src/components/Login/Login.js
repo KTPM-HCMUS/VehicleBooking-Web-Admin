@@ -57,6 +57,7 @@ const Login = () => {
         const loggedInUser = {userId: user.userId, password: user.password};
         setLoggedInUser(loggedInUser);
         localStorage.setItem('token', json.result.token);
+        console.log(json.result.token)
         history.replace(from);
       }
       else{
@@ -68,15 +69,17 @@ const Login = () => {
     }
   }
 
+
   const showError = (error) => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
 
   const handleLogin = (event) => {
-    signIn();
+    signIn().then()
     event.preventDefault();
   };
+
   return (
     <>
       <div className="container login-page d-flex justify-content-center">

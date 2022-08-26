@@ -25,6 +25,18 @@ function App() {
             <Route path="/home">
               <Home></Home>
             </Route>
+            <Route path="/client">
+              <ClientManagement></ClientManagement>
+            </Route>
+            <Route path="/chart">
+              <BarChart></BarChart>
+            </Route>
+            <PrivateRoute path="/booking/:transportationMedium">
+              <Booking></Booking>
+            </PrivateRoute>
+            <Route path="/driver">
+              <DriverManagement></DriverManagement>
+            </Route>
             <Route path="/statistic">
               <BasicTable></BasicTable>
             </Route>
