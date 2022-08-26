@@ -64,6 +64,7 @@ const Booking = () => {
   };
 
   const handleSubmit = async (event) => {
+    console.log(localStorage.getItem("token"));
     var objectdata;
     objectdata.typeOfVehicle = 1;
     objectdata.longitudeDepart = 106.6823;
@@ -129,6 +130,13 @@ const Booking = () => {
               <input
                 type="tel"
                 name="phone"
+                onBlur={handleOnBlur}
+                className="location mb-2"/>
+
+              <label htmlFor="name" className="mb-2"> Name </label>
+              <input
+                type="text"
+                name="name"
                 onBlur={handleOnBlur}
                 className="location mb-2"/>
 

@@ -48,7 +48,7 @@ export default function BarChart(){
     async function fetchData() {
 
         const headers = {
-            'Authorization': 'Bearer' + token,
+            'Authorization': 'Bearer ' + token,
         }
         const response = await fetch("/v1/statistic", {headers});
         const json = await response.json();

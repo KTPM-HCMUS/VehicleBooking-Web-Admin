@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 export default function ClientTable() {
     let token = localStorage.getItem('token').toString();
+    console.log(token);
     let [clients, setClients] = useState([]);
     async function fetchData() {
 
