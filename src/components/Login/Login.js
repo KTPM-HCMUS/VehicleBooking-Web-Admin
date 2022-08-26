@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { UserContext } from "../../App";
 import { useHistory, useLocation } from "react-router";
+import axios from 'axios';
 
 const Login = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -36,27 +37,22 @@ const Login = () => {
     history.replace(from);
   };
 
+  async function signIn(){
+    const response = await fetch("/login", {
+      userId: user.userId,
+      password: user.password
+    });
+    const json = await response.json();
+    console.log(json)
+  }
+
   const showError = (error) => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
 
   const handleLogin = (event) => {
-      fetch("http://34.121.234.226:8080/login", {
-        method: "POST",
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({
-          'userId': user.userId,
-          'password': user.password
-        })
-      }).then(res => {
-        console.log(res);
-      })
-      .catch(error => {
-        console.log(error)
-        showError(error);
-      });
+    signIn();
     event.preventDefault();
   };
   return (
