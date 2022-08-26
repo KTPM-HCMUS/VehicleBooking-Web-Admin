@@ -38,9 +38,16 @@ const Login = () => {
   };
 
   async function signIn(){
-    const response = await fetch("/login", {
-      userId: user.userId,
-      password: user.password
+    const response = await fetch("/login",{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: user.userId,
+        password: user.password
+      })
     });
     const json = await response.json();
     console.log(json)
