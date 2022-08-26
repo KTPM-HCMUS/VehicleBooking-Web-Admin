@@ -10,7 +10,7 @@ const VehicleCard = (props) => {
       <div className="card align-items-center">
         <img src={image} className="card-img-top" alt="" />
         <div className="card-body">
-          <Link to={`/destination/${title}`} style={{ textDecoration: "none" }}>
+          <Link to={`/booking/${title}`} style={{ textDecoration: "none" }}>
             <h3 className="card-title">{title}</h3>
           </Link>
         </div>

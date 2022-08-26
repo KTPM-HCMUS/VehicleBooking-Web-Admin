@@ -29,13 +29,15 @@ const Login = () => {
     setUser(userInfo);
   };
 
-  const logIn = (userCredential) => {
-    const { email } = userCredential.user;
-    const displayName = user.name;
-    const signedInUser = { name: displayName, email };
-    setLoggedInUser(signedInUser);
-    history.replace(from);
-  };
+  function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  }
 
   async function signIn(){
     const response = await fetch("/login",{
@@ -50,7 +52,20 @@ const Login = () => {
       })
     });
     const json = await response.json();
-    console.log(json)
+    if (json){
+      if (json.responseInfo.status == 'success'){
+        const loggedInUser = {userId: user.userId, password: user.password};
+        setLoggedInUser(loggedInUser);
+        localStorage.setItem('token', json.result.token);
+        history.replace(from);
+      }
+      else{
+        showError('Login failed');
+      }
+    }
+    else {
+      showError('Login failed');
+    }
   }
 
   const showError = (error) => {
