@@ -30,7 +30,7 @@ const Header = () => {
                 </Link>
               </li>
               <li className="nav-item ms-5 login-btn">
-                {!loggedInUser.name ? (
+                {!loggedInUser.userId ? (
                   <Link
                     to="/login"
                     className="nav-link"
@@ -39,7 +39,7 @@ const Header = () => {
                     Login
                   </Link>
                 ) : (
-                  <p className="name">{loggedInUser.name}</p>
+                  <p className="name">{loggedInUser.userId}</p>
                 )}
               </li>
             </ul>
