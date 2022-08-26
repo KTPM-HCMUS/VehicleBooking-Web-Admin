@@ -5,8 +5,10 @@ import { faRoad, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router";
 import bikeImage from "../../images/bike.png";
 import carImage from "../../images/car.png";
-
+import Autocomplete from "react-google-autocomplete";
 import { DirectionsRenderer, DirectionsService, GoogleMap, LoadScript, Marker} from "@react-google-maps/api";
+import { Alert } from "bootstrap";
+
 const API_KEY = "AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA";
 const containerStyle = {
   width: "100%",
@@ -42,6 +44,7 @@ const Booking = () => {
     price: ""
   });
   const [emptyLocation, setEmptyLocation] = useState(true);
+  const [directionResponse, setDirectionResponse] = useState(null);
 
   const handleOnBlur = (event) => {
     const updateBooking = { ...booking };
@@ -49,41 +52,78 @@ const Booking = () => {
         const phone = event.target.value;
         console.log(phone);
     }
+    if (event.target.name === "pickup") {
+      const pickup = event.target.value;
+      console.log(pickup);
+    } 
+    else if (event.target.name === "dropoff") {
+        const dropoff = event.target.value;
+        console.log(dropoff);
+    }
     setBooking(updateBooking);
-    console.log(updateBooking.typeOfVehicle);
   };
 
-  const handleSearch = (event) => {
+  const handleSubmit = async (event) => {
+    var objectdata;
+    objectdata.typeOfVehicle = 1;
+    objectdata.longitudeDepart = 106.6823;
+    objectdata.latitudeDepart = 10.7627;
+    objectdata.longitudeDestination = 106.6633127;
+    objectdata.latitudeDestination = 10.755126307591706;
+    objectdata.addressDepart = "227 Nguyễn Văn Cừ, Quận 5, TP Hồ Chí Minh";
+    objectdata.addressDestination = "217 Hồng Bàng, Quận 5, TP Hồ Chí Minh";
+    objectdata.price = 9300;
+    objectdata.userId = "123585";
+    objectdata.name = "Ngoc Le 123";
+
+    const response = await fetch("/api/v1/location/admin",{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')
+      },
+      body: JSON.stringify({
+        typeOfVehicle: objectdata.typeOfVehicle,
+        longitudeDepart: objectdata.longitudeDepart,
+        latitudeDepart: objectdata.latitudeDepart,
+        longitudeDestination: objectdata.longitudeDestination,
+        latitudeDestination: objectdata.latitudeDestination,
+        addressDepart: objectdata.addressDepart,
+        addressDestination: objectdata.addressDestination,
+        price: objectdata.price,
+        userId: objectdata.userId, 
+        name: objectdata.name
+      })
+    });
+    const json = await response.json();
+    if (json)
+    {
+      if(json.userId){
+        alert("The driver with name " + json.name + " with vehicle plate number " + json.vehiclePlate + ", phone: " + json.userId + "has received the booking!");
+      }
+      else{
+        showError('No driver available!');
+      }
+    }
+    else {
+      showError('No driver available!');
+    }
     event.preventDefault();
   };
 
-  const [directionResponse, setDirectionResponse] = useState(null);
 
   const showError = (error) => {
     const errorMessage = error.message;
     setError(errorMessage);
   };
 
-  function getCoordinates(address){
-    fetch("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + '&key='+ API_KEY)
-      .then(response => response.json())
-      .then(data => {
-        var locationCoordinates; 
-        locationCoordinates.latitude = data.results.geometry.location.lat;
-        locationCoordinates.longitude = data.results.geometry.location.lng;
-        return locationCoordinates;
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
-
   return (
     <div className="container mt-5 pb-5">
       <div className="row gx-5 pb-5">
         <div className="col-md-4 search-form">
           {!transportation && (
-            <form onSubmit={handleSearch} className="search-form-content">
+            <form onSubmit={handleSubmit} className="search-form-content">
               
               <label htmlFor="phone" className="mt-3 mb-2"> Phone </label>
               <input
@@ -93,22 +133,30 @@ const Booking = () => {
                 className="location mb-2"/>
 
               <label htmlFor="pickup" className="mb-2"> Pick Up </label>
-              <input
-                type="text"
+              <Autocomplete
                 name="pickup"
+                className="location mb-2"
+                apiKey="AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA"
                 onBlur={handleOnBlur}
-                className="location mb-2"/>
+                onPlaceSelected={(place) => {
+                  console.log(place);
+                }}
+              />
               
               <label htmlFor="dropoff" className="mb-2"> Drop Off </label>
-              <input
-                type="text"
+              <Autocomplete
                 name="dropoff"
+                className="location mb-2"
+                apiKey="AIzaSyCyOWzvbd05Y2YN3fEMwQ1Rxm5VSSlDZHA"
                 onBlur={handleOnBlur}
-                className="location mb-2"/>
+                onPlaceSelected={(place) => {
+                  console.log(place);
+                }}
+              />
               
               <input
                 type="submit"
-                value="Search"
+                value="Book"
                 className="search-btn mt-2 mb-3"
               />
               {!emptyLocation && (
