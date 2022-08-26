@@ -19,13 +19,28 @@ const Header = () => {
             className="collapse navbar-collapse justify-content-end"
             id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item ms-5">
+              <li className="nav-item ms-2">
                 <Link to="/home" className="nav-link">
                   Home
                 </Link>
               </li>
               <li className="nav-item ms-5">
-                <Link to="/home" className="nav-link">
+                <Link to="/statistic" className="nav-link">
+                  Booking Management
+                </Link>
+              </li>
+              <li className="nav-item ms-5">
+                <Link to="/client" className="nav-link">
+                  Client Management
+                </Link>
+              </li>
+              <li className="nav-item ms-5">
+                <Link to="/driver" className="nav-link">
+                  Driver Management
+                </Link>
+              </li>
+              <li className="nav-item ms-5">
+                <Link to="/chart" className="nav-link">
                   Statistics
                 </Link>
               </li>

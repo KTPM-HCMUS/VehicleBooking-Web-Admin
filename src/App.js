@@ -6,6 +6,9 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import NoMatch from "./components/404/404";
 import BasicTable from "./components/History/History";
+import BarChart from "./components/Chart/BarChart"
+import DriverManagement from "./components/DriverManagement/driver"
+import ClientManagement from "./components/ClientManagement/client"
 export const UserContext = createContext();
 
 function App() {
@@ -22,6 +25,15 @@ function App() {
             </Route>
             <Route path="/statistic">
               <BasicTable></BasicTable>
+            </Route>
+            <Route path="/chart">
+              <BarChart></BarChart>
+            </Route>
+            <Route path="/driver">
+              <DriverManagement></DriverManagement>
+            </Route>
+            <Route path="/client">
+              <ClientManagement></ClientManagement>
             </Route>
             <Route path="/login">
               <Login></Login>
